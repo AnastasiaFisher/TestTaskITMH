@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
+
+namespace TestTaskITMH
+{
+    public class TestTask1
+    {
+        IWebDriver driver = new ChromeDriver();
+
+        [Test]
+        public void Task1_1()
+        {
+            String pink_color = "rgba(236, 0, 140, 1)";
+            String color = "";
+            Actions action = new Actions(driver);
+
+            String[] dataTarget = new String[] {
+                "'NavigationProducts'",
+                "'NavigationInternet'",
+                "'NavigationTelevision'",
+                "'NavigationVoice'",
+                "'NavigationHouse'",
+                "'NavigationClient'" };
+
+            String[] textName = new String[] {
+                "'ПРОДУКТЫ'",
+                "'СВЕРХИНТЕРНЕТ'",
+                "'СВЕРХТЕЛЕВИДЕНИЕ'",
+                "'ГОЛОСОВАЯ'",
+                "'ЦИФРОВОЙ'",
+                "'КЛИЕНТАМ'" };
+
+            driver.Navigate().GoToUrl("https://planeta.tc/ekb");
+
+            for (int i = 0; i < dataTarget.Length; i++)
+            {
+                IWebElement element = driver.FindElement(By.XPath("//*[@data-target =" + dataTarget[i] + "]"));
+                IWebElement element_in = driver.FindElement(By.XPath("//*[text()=" + textName[i] + "]"));
+
+                //Наведение курсора мыши на элемент
+                action.MoveToElement(element).Perform();
+                //Считывание цвета элемента 
+                color = element_in.GetCssValue("color");
+                //Сравнение цвета color с розовым
+                Assert.AreEqual(pink_color, color);
+            }
+
+            driver.Close();
+            driver.Quit();
+        }
+    }
+}
